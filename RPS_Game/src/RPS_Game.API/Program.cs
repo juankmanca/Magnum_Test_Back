@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using RPS_Game.API.Data;
+using RPS_Game.API.Repository;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +10,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IGameRepository, GameRepository>();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer("name=DataBase");
+});
 
 builder.Services.AddCors(options =>
 {
