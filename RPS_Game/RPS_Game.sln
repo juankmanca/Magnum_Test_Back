@@ -5,7 +5,9 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6224D57B-5FA4-405F-B4A9-68BBE489164D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPS_Game.API", "src\RPS_Game.API\RPS_Game.API.csproj", "{415BD50A-7B1F-49E2-960B-CF2BFD59868E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPS_Game.API", "src\RPS_Game.API\RPS_Game.API.csproj", "{415BD50A-7B1F-49E2-960B-CF2BFD59868E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPS_Game.UnitTest", "tests\RPS_Game.UnitTest\RPS_Game.UnitTest.csproj", "{76318C78-0A7E-4116-AB34-683F42FF768D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,12 +19,17 @@ Global
 		{415BD50A-7B1F-49E2-960B-CF2BFD59868E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{415BD50A-7B1F-49E2-960B-CF2BFD59868E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{415BD50A-7B1F-49E2-960B-CF2BFD59868E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76318C78-0A7E-4116-AB34-683F42FF768D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76318C78-0A7E-4116-AB34-683F42FF768D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76318C78-0A7E-4116-AB34-683F42FF768D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76318C78-0A7E-4116-AB34-683F42FF768D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{415BD50A-7B1F-49E2-960B-CF2BFD59868E} = {6224D57B-5FA4-405F-B4A9-68BBE489164D}
+		{76318C78-0A7E-4116-AB34-683F42FF768D} = {6224D57B-5FA4-405F-B4A9-68BBE489164D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {723982CD-7C5A-4E5E-88CF-F0BF582B995C}

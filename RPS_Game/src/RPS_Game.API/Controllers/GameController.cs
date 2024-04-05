@@ -32,7 +32,7 @@ namespace RPS_Game.API.Controllers
         [HttpGet]
         [ActionName("playAgain/{id}")]
 
-        public async Task<IActionResult> playAgain([FromRoute] int id)
+        public async Task<IActionResult> PlayAgain([FromRoute] int id)
         {
             Game? game = await _gameRepository.GetGameByIdAsync(id);
             if (game is null) return NotFound(Result.Failure(GameErrors.NotFound));
@@ -40,7 +40,7 @@ namespace RPS_Game.API.Controllers
             game.Result = 0;
             game.Rounds = null;
 
-            var result = await _gameRepository.UpdateGame(game);
+            var result = await _gameRepository.UpdateGameAsync(game);
 
             if (result.IsFailure) return BadRequest(result);
 
@@ -64,7 +64,7 @@ namespace RPS_Game.API.Controllers
         [HttpPost]
         [ActionName("registerMovement")]
 
-        public async Task<IActionResult> registerMovement([FromBody] RegisterMovementQuery query)
+        public async Task<IActionResult> RegisterMovement([FromBody] RegisterMovementQuery query)
         {
             Game? game = await _gameRepository.GetGameByUserIdAsync(query.Player);
             if (game is null) return NotFound(Result.Failure(GameErrors.NotFound));
@@ -72,6 +72,8 @@ namespace RPS_Game.API.Controllers
             var result = Result.Create(new newMovementResponse());
 
             Round? round = await _gameRepository.GetRoundByGameAsync(game.Id, game.Player1, game.RoundsNumber);
+
+            if(round is null) return BadRequest(Result.Failure(GameErrors.ExcedeExpectedRounds));
 
             var ValidatedRound = ValidateRound.Validate(query.Player, query.Movement, round);
 
@@ -88,7 +90,7 @@ namespace RPS_Game.API.Controllers
 
                 game.Result = WinnerPlayer;
 
-                var updateResult = await _gameRepository.UpdateGame(game);
+                var updateResult = await _gameRepository.UpdateGameAsync(game);
 
                 if (updateResult.IsFailure) return BadRequest(updateResult);
 

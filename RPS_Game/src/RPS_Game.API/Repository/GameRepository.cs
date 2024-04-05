@@ -22,7 +22,7 @@ namespace RPS_Game.API.Repository
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<Result> UpdateGame(Game game)
+        public async Task<Result> UpdateGameAsync(Game game)
         {
             try
             {
