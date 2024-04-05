@@ -15,6 +15,6 @@ namespace RPS_Game.API.Repository
 
         Task<Round?> GetRoundByGameAsync(int GameID, Guid Player, int roundNumber);
 
-        Task UpdateGame(Game game);
+        Task<Result> UpdateGame(Game game);
     }
 }

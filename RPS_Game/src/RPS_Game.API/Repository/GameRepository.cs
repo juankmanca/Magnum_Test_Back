@@ -3,7 +3,6 @@ using RPS_Game.API.Data;
 using RPS_Game.API.Entities;
 using RPS_Game.API.Models;
 using RPS_Game.API.Utilities;
-using RPS_Game.API.Utilities.Enums;
 
 namespace RPS_Game.API.Repository
 {
@@ -23,12 +22,20 @@ namespace RPS_Game.API.Repository
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task UpdateGame(Game game)
+        public async Task<Result> UpdateGame(Game game)
         {
-            _context.Games.Update(game);
+            try
+            {
+                _context.Games.Update(game);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
+                return Result.Success();
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure(GameErrors.ErrorUpdatingGame);
+            }
         }
 
         public async Task<Game?> GetGameByUserIdAsync(Guid id)

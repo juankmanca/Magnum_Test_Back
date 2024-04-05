@@ -40,9 +40,11 @@ namespace RPS_Game.API.Controllers
             game.Result = 0;
             game.Rounds = null;
 
-            await _gameRepository.UpdateGame(game);
+            var result = await _gameRepository.UpdateGame(game);
 
-            return Ok(Result.Success());
+            if (result.IsFailure) return BadRequest(result);
+
+            return Ok(result);
         }
 
         [HttpPost]
@@ -86,7 +88,9 @@ namespace RPS_Game.API.Controllers
 
                 game.Result = WinnerPlayer;
 
-                await _gameRepository.UpdateGame(game);
+                var updateResult = await _gameRepository.UpdateGame(game);
+
+                if (updateResult.IsFailure) return BadRequest(updateResult);
 
                 result.Value.finishGame = true;
                 result.Value.result = WinnerPlayer;
