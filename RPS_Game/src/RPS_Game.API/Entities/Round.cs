@@ -1,5 +1,6 @@
 ﻿using RPS_Game.API.Utilities.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace RPS_Game.API.Entities
 {
@@ -9,6 +10,8 @@ namespace RPS_Game.API.Entities
 
         [ForeignKey("GameId")]
         public int GameId { get; set; }
+
+        [JsonIgnore]
         public Game? Game { get; set; }
         public Movement movement_player1 { get; set; }
         public Movement movement_player2 { get; set; }

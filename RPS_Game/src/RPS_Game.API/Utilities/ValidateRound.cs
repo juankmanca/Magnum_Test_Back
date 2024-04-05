@@ -25,9 +25,9 @@ namespace RPS_Game.API.Utilities
             return results[index1 - 1, index2 - 1];
         }
 
-        public static Result Validate(Guid Player, Movement movement, Round round)
+        public static Round? Validate(Guid Player, Movement movement, Round round)
         {
-            if (round.Current_turn != Player) return Result.Failure(GameErrors.ItsNotYourTurn);
+            if (round.Current_turn != Player) return null;
 
             if (round.movement_player1 == Movement.None)
             {
@@ -45,7 +45,7 @@ namespace RPS_Game.API.Utilities
                 round.result = ValidateMovements(round.movement_player1, round.movement_player2);
             }
 
-            return Result.Success(round);
+            return round;
         }
 
         public static int ValidateWinner(ICollection<Round> rounds)

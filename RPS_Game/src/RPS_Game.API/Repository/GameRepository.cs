@@ -16,7 +16,22 @@ namespace RPS_Game.API.Repository
             _context = context;
         }
 
-        public async Task<Game?> GetGameByIdAsync(Guid id)
+        public async Task<Game?> GetGameByIdAsync(int id)
+        {
+            return await _context.Games
+                .Include(g => g.Rounds)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task UpdateGame(Game game)
+        {
+            _context.Games.Update(game);
+
+            await _context.SaveChangesAsync();
+
+        }
+
+        public async Task<Game?> GetGameByUserIdAsync(Guid id)
         {
             return await _context.Games
                 .Include(g => g.Rounds)
@@ -39,7 +54,7 @@ namespace RPS_Game.API.Repository
 
         public async Task<Round?> GetRoundByGameAsync(int GameID, Guid Player, int roundNumber)
         {
-            Round? round = await _context.Rounds.FirstOrDefaultAsync(x => x.RoundNumber == roundNumber);
+            Round? round = await _context.Rounds.FirstOrDefaultAsync(x => x.RoundNumber == roundNumber && x.GameId == GameID);
 
             if (round is not null && round.Current_turn != null) return round;
 
@@ -64,7 +79,7 @@ namespace RPS_Game.API.Repository
                 _context.Games.Add(newGame);
                 await _context.SaveChangesAsync();
 
-                return Result.Success(newGame);
+                return Result.Success(newGame.Id);
             }
             catch (Exception ex)
             {

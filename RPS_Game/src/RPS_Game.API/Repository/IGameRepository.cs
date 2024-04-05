@@ -6,12 +6,15 @@ namespace RPS_Game.API.Repository
 {
     public interface IGameRepository
     {
-        Task<Game?> GetGameByIdAsync(Guid id);
+        Task<Game?> GetGameByIdAsync(int id);
+        Task<Game?> GetGameByUserIdAsync(Guid id);
 
         Task<Result> RegisterPlayersAsync(Game newGame);
 
         Task<Result> RegisterMovementAsync(Round round);
 
         Task<Round?> GetRoundByGameAsync(int GameID, Guid Player, int roundNumber);
+
+        Task UpdateGame(Game game);
     }
 }

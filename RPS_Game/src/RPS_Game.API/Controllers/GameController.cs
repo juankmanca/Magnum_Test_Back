@@ -17,6 +17,34 @@ namespace RPS_Game.API.Controllers
             _gameRepository = gameRepository;
         }
 
+        [HttpGet]
+        [ActionName("getGameInfo/{id}")]
+        public async Task<IActionResult> GetGameInfo([FromRoute] int id)
+        {
+            Game? game = await _gameRepository.GetGameByIdAsync(id);
+            if(game is null) return NotFound(Result.Failure(GameErrors.NotFound));
+
+            var response = Result.Success(game);
+
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [ActionName("playAgain/{id}")]
+
+        public async Task<IActionResult> playAgain([FromRoute] int id)
+        {
+            Game? game = await _gameRepository.GetGameByIdAsync(id);
+            if (game is null) return NotFound(Result.Failure(GameErrors.NotFound));
+
+            game.Result = 0;
+            game.Rounds = null;
+
+            await _gameRepository.UpdateGame(game);
+
+            return Ok(Result.Success());
+        }
+
         [HttpPost]
         [ActionName("registerPlayers")]
 
@@ -36,34 +64,38 @@ namespace RPS_Game.API.Controllers
 
         public async Task<IActionResult> registerMovement([FromBody] RegisterMovementQuery query)
         {
-            Game? game = await _gameRepository.GetGameByIdAsync(query.Player);
+            Game? game = await _gameRepository.GetGameByUserIdAsync(query.Player);
+            if (game is null) return NotFound(Result.Failure(GameErrors.NotFound));
 
-            if (game is null)
-            {
-                var result = Result.Failure(GameErrors.NotFound);
-                return NotFound(result);
-            }
+            var result = Result.Create(new newMovementResponse());
 
             Round? round = await _gameRepository.GetRoundByGameAsync(game.Id, game.Player1, game.RoundsNumber);
-            if(round is null)
+
+            var ValidatedRound = ValidateRound.Validate(query.Player, query.Movement, round);
+
+            if (ValidatedRound is null) return BadRequest(Result.Failure(GameErrors.ItsNotYourTurn));
+
+            var dbResponse = await _gameRepository.RegisterMovementAsync(ValidatedRound);
+
+            if (dbResponse.IsFailure) return BadRequest(dbResponse);
+
+            if(ValidatedRound.Current_turn == null && ValidatedRound.RoundNumber == 3)
             {
                 //Calculate winner
                 int WinnerPlayer = ValidateRound.ValidateWinner(game.Rounds!);
 
-                //TODO: Register winnr
+                game.Result = WinnerPlayer;
 
-                return Ok(WinnerPlayer);
+                await _gameRepository.UpdateGame(game);
+
+                result.Value.finishGame = true;
+                result.Value.result = WinnerPlayer;
             }
 
-            var response = ValidateRound.Validate(query.Player, query.Movement, round);
 
-            if (response.IsFailure) return BadRequest(response);
+            result.Value.round = ValidatedRound;
 
-            var dbResponse = await _gameRepository.RegisterMovementAsync(round);
-
-            if (dbResponse.IsFailure) return BadRequest(dbResponse);
-
-            return Ok(dbResponse);
+            return Ok(result);
 
         }
     }
